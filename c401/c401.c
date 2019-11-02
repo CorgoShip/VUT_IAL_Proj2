@@ -152,10 +152,12 @@ void BSTDispose (tBSTNodePtr *RootPtr) {
 ** inicializaci. Tuto funkci implementujte rekurzivně bez deklarování pomocné
 ** funkce.
 **/
-	
-
-	 solved = FALSE;		  /* V případě řešení smažte tento řádek! */
-
+	if(RootPtr != NULL)                         // dat sem jeste aj init???
+	{
+		BSTDispose(RootPtr->lptr);
+		BSTDispose(RootPtr->rptr);
+		free(RootPtr);
+	}
 }
 
 /* konec c401.c */
