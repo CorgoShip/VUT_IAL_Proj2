@@ -154,7 +154,7 @@ void BSTDispose (tBSTNodePtr *RootPtr) {
 **/
 	if(RootPtr != NULL)                         // dat sem jeste aj init???
 	{
-		BSTDispose(RootPtr->lptr);
+		BSTDispose(RootPtr->lptr); // try (*RootPtr)->;
 		BSTDispose(RootPtr->rptr);
 		free(RootPtr);
 	}
