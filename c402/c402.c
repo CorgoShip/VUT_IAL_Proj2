@@ -178,9 +178,7 @@ void BTInit (tBTNodePtr *RootPtr)	{
 ** Všimněte si, že zde se poprvé v hlavičce objevuje typ ukazatel na ukazatel,
 ** proto je třeba při práci s RootPtr použít dereferenční operátor *.
 **/
-	
-
-	 solved = FALSE;		  /* V případě řešení smažte tento řádek! */
+	*RootPtr = NULL;
 }
 
 void BTInsert (tBTNodePtr *RootPtr, int Content) {
@@ -193,6 +191,12 @@ void BTInsert (tBTNodePtr *RootPtr, int Content) {
 ** se ve stromu může vyskytnout nejvýše jednou). Pokud se vytváří nový uzel,
 ** vzniká vždy jako list stromu. Funkci implementujte nerekurzivně.
 **/
+
+	while (*RootPtr != NULL)
+	{
+		/* code */
+	}
+	
 
 	
 
