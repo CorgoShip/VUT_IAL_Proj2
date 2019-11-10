@@ -75,18 +75,18 @@ int BSTSearch (tBSTNodePtr RootPtr, char K, int *Content)	{
 	{
 		return FALSE;
 	}
-	else if (RootPtr->Key = K)
+	else if (RootPtr->Key == K)
 	{
 		*Content = RootPtr->BSTNodeCont;
 		return FALSE;
 	}
 	else if (RootPtr->Key > K)
 	{
-		return BSTSearch(RootPtr->LPtr);
+		return BSTSearch(RootPtr->LPtr, K, Content);
 	}
 	else
 	{
-		return BSTSearch(RootPtr->RPtr);
+		return BSTSearch(RootPtr->RPtr, K, Content);
 	}
 }
 
@@ -109,7 +109,7 @@ void BSTInsert (tBSTNodePtr* RootPtr, char K, int Content)	{
 **/
 	if (*RootPtr == NULL)
 	{
-		*RootPtr = malloc(sizeof(tBSTNode));
+		*RootPtr = malloc(sizeof(struct tBSTNode));
 
 		if (*RootPtr == NULL)
 		{
@@ -131,12 +131,12 @@ void BSTInsert (tBSTNodePtr* RootPtr, char K, int Content)	{
 	
 	if ((*RootPtr)->Key > K)
 	{
-		BSTInsert((*RootPtr)->LPtr, K, Content);
+		BSTInsert(&((*RootPtr)->LPtr), K, Content);
 		return;
 	}
 	else
 	{
-		BSTInsert((*RootPtr)->RPtr, K, Content);
+		BSTInsert(&((*RootPtr)->RPtr), K, Content);
 		return;
 	}
 }
@@ -182,7 +182,7 @@ void BSTDelete (tBSTNodePtr *RootPtr, char K) 		{
 ** Tuto funkci implementujte rekurzivně s využitím dříve deklarované
 ** pomocné funkce ReplaceByRightmost.
 **/
-	tBSTNodePtr aux = RootPtr;
+	tBSTNodePtr temp = RootPtr;
 
 	if ((*RootPtr)->Key == NULL)
 	{
@@ -196,12 +196,12 @@ void BSTDelete (tBSTNodePtr *RootPtr, char K) 		{
 	
 	if ((*RootPtr)->Key > K)
 	{
-		BSTDelete ((*RootPtr)->LPtr, K);
+		BSTDispose(&((*RootPtr)->LPtr));
 		return;
 	}
 	else
 	{
-		BSTDelete ((*RootPtr)->RPtr, K);
+		BSTDispose(&((*RootPtr)->RPtr));
 		return;
 	}
 }
@@ -216,11 +216,10 @@ void BSTDispose (tBSTNodePtr *RootPtr) {
 **/
 	if(RootPtr != NULL)
 	{
-		BSTDispose(RootPtr->lptr);
-		BSTDispose(RootPtr->rptr);
-		// BSTDispose(&((*RootPtr)->LPtr));
+		BSTDispose(&((*RootPtr)->LPtr));
+		BSTDispose(&((*RootPtr)->RPtr));
 		free(RootPtr);
-		//*RootPtr = NULL;
+		*RootPtr = NULL;
 	}
 }
 
