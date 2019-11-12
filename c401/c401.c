@@ -153,13 +153,52 @@ void ReplaceByRightmost (tBSTNodePtr PtrReplaced, tBSTNodePtr *RootPtr) {
 ** Tato pomocná funkce bude použita dále. Než ji začnete implementovat,
 ** přečtěte si komentář k funkci BSTDelete().
 **/
-	if (RootPtr == NULL)
+	if (RootPtr == NULL) // toto co????
 	{
 		return;
 	}
-	
-	tBSTNodePtr aux = *RootPtr; //proc to tu musi bt?
 
+	if ((*RootPtr)->RPtr == NULL)
+	{
+		tBSTNodePtr temp = *RootPtr;
+		PtrReplaced->BSTNodeCont = temp->BSTNodeCont;
+		PtrReplaced->Key = temp->Key;
+
+		if (temp->LPtr != NULL)
+		{
+			PtrReplaced->LPtr = temp->LPtr;
+		}
+		else
+		{
+			PtrReplaced->LPtr = NULL;
+		}
+
+		free(temp);
+		return;		
+	}
+
+	if ((*RootPtr)->RPtr->RPtr == NULL)
+	{
+		tBSTNodePtr temp = (*RootPtr)->RPtr; //
+		PtrReplaced->BSTNodeCont = temp->BSTNodeCont;  //toto by nemelo vadit
+		PtrReplaced->Key = temp->Key;  // PtrReplaced->Key = temp->Key;
+
+		if (temp->LPtr != NULL)
+		{
+			(*RootPtr)->RPtr = temp->LPtr;
+		}
+		else
+		{
+			(*RootPtr)->RPtr = NULL;
+		}
+
+		free(temp); //
+		return;
+	}
+	
+	ReplaceByRightmost(PtrReplaced, &((*RootPtr)->RPtr));
+
+	/*
 	if ((*RootPtr)->LPtr == NULL && (*RootPtr)->RPtr == NULL) // nema potomky
 	{
 		PtrReplaced->BSTNodeCont = (*RootPtr)->BSTNodeCont;
@@ -167,7 +206,8 @@ void ReplaceByRightmost (tBSTNodePtr PtrReplaced, tBSTNodePtr *RootPtr) {
 		free(RootPtr);
 		//PtrReplaced->RPtr = (*RootPtr)->BSTNodeCont;
 		//PtrReplaced->LPtr = (*RootPtr)->BSTNodeCont;
-	}	
+	}
+	*/
 }
 
 void BSTDelete (tBSTNodePtr *RootPtr, char K) 		{
@@ -182,26 +222,111 @@ void BSTDelete (tBSTNodePtr *RootPtr, char K) 		{
 ** Tuto funkci implementujte rekurzivně s využitím dříve deklarované
 ** pomocné funkce ReplaceByRightmost.
 **/
-	tBSTNodePtr temp = RootPtr;
+	tBSTNodePtr temp;
 
-	if ((*RootPtr)->Key == NULL)
+	if (*RootPtr == NULL)  // if (!*RootPtr)
 	{
 		return;
 	}
+
+
+
+
 	
 	if ((*RootPtr)->Key == K)
 	{
-		ReplaceByRightmost()
+		temp = *RootPtr;
+
+		if ((*RootPtr)->LPtr == NULL && (*RootPtr)->RPtr == NULL) // nema potomky
+		{
+			*RootPtr = NULL;
+		}
+		else if ((*RootPtr)->LPtr != NULL && (*RootPtr)->RPtr == NULL)
+		{
+			*RootPtr = temp->LPtr;
+		}
+		else if ((*RootPtr)->LPtr == NULL && (*RootPtr)->RPtr != NULL)
+		{
+			*RootPtr = temp->RPtr;
+		}
+		else
+		{
+			ReplaceByRightmost(temp, &(temp->LPtr));
+			return;
+		}
+		free(temp);		
 	}
-	
+
+
+
+
+
+
+
 	if ((*RootPtr)->Key > K)
 	{
-		BSTDispose(&((*RootPtr)->LPtr));
-		return;
+		if ((*RootPtr)->LPtr != NULL)
+		{
+			if ((*RootPtr)->LPtr->Key == K)
+			{
+				temp = (*RootPtr)->LPtr;
+
+				if ((*RootPtr)->LPtr == NULL && (*RootPtr)->RPtr == NULL) // nema potomky
+				{
+					(*RootPtr)->LPtr = NULL;
+				}
+
+				else if ((*RootPtr)->LPtr != NULL && (*RootPtr)->RPtr == NULL)
+				{
+					(*RootPtr)->LPtr = temp->LPtr;
+				}
+				else if ((*RootPtr)->LPtr == NULL && (*RootPtr)->RPtr != NULL)
+				{
+					(*RootPtr)->LPtr = temp->RPtr;
+				}
+				else
+				{
+					ReplaceByRightmost(temp, &(temp->LPtr));
+					return;
+				}
+				free(temp);
+				return; // proc?
+			}	
+		}
+		BSTDelete(&((*RootPtr)->LPtr), K);
+		return;		
 	}
 	else
 	{
-		BSTDispose(&((*RootPtr)->RPtr));
+		if ((*RootPtr)->RPtr != NULL)
+		{
+			if ((*RootPtr)->RPtr->Key == K)
+			{
+				temp = (*RootPtr)->LPtr;
+
+				if ((*RootPtr)->LPtr == NULL && (*RootPtr)->RPtr == NULL) // nema potomky
+				{
+					(*RootPtr)->RPtr = NULL;
+				}
+				
+				else if ((*RootPtr)->LPtr != NULL && (*RootPtr)->RPtr == NULL)
+				{
+					(*RootPtr)->RPtr = temp->LPtr;
+				}
+				else if ((*RootPtr)->LPtr == NULL && (*RootPtr)->RPtr != NULL)
+				{
+					(*RootPtr)->RPtr = temp->RPtr;
+				}
+				else
+				{
+					ReplaceByRightmost(temp, &(temp->LPtr));
+					return;
+				}
+				free(temp);
+				return; // proc?
+			}
+		}
+		BSTDelete(&((*RootPtr)->RPtr), K);
 		return;
 	}
 }
