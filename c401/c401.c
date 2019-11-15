@@ -78,7 +78,7 @@ int BSTSearch (tBSTNodePtr RootPtr, char K, int *Content)	{
 	else if (RootPtr->Key == K)
 	{
 		*Content = RootPtr->BSTNodeCont;
-		return FALSE;
+		return TRUE;
 	}
 	else if (RootPtr->Key > K)
 	{
@@ -132,12 +132,10 @@ void BSTInsert (tBSTNodePtr* RootPtr, char K, int Content)	{
 	if ((*RootPtr)->Key > K)
 	{
 		BSTInsert(&((*RootPtr)->LPtr), K, Content);
-		return;
 	}
 	else
 	{
 		BSTInsert(&((*RootPtr)->RPtr), K, Content);
-		return;
 	}
 }
 
@@ -153,11 +151,6 @@ void ReplaceByRightmost (tBSTNodePtr PtrReplaced, tBSTNodePtr *RootPtr) {
 ** Tato pomocná funkce bude použita dále. Než ji začnete implementovat,
 ** přečtěte si komentář k funkci BSTDelete().
 **/
-	if (RootPtr == NULL) // toto co????
-	{
-		return;
-	}
-
 	if ((*RootPtr)->RPtr == NULL)
 	{
 		tBSTNodePtr temp = *RootPtr;
@@ -179,9 +172,9 @@ void ReplaceByRightmost (tBSTNodePtr PtrReplaced, tBSTNodePtr *RootPtr) {
 
 	if ((*RootPtr)->RPtr->RPtr == NULL)
 	{
-		tBSTNodePtr temp = (*RootPtr)->RPtr; //
-		PtrReplaced->BSTNodeCont = temp->BSTNodeCont;  //toto by nemelo vadit
-		PtrReplaced->Key = temp->Key;  // PtrReplaced->Key = temp->Key;
+		tBSTNodePtr temp = (*RootPtr)->RPtr;
+		PtrReplaced->BSTNodeCont = temp->BSTNodeCont;
+		PtrReplaced->Key = temp->Key;
 
 		if (temp->LPtr != NULL)
 		{
@@ -192,22 +185,11 @@ void ReplaceByRightmost (tBSTNodePtr PtrReplaced, tBSTNodePtr *RootPtr) {
 			(*RootPtr)->RPtr = NULL;
 		}
 
-		free(temp); //
+		free(temp);
 		return;
 	}
 	
 	ReplaceByRightmost(PtrReplaced, &((*RootPtr)->RPtr));
-
-	/*
-	if ((*RootPtr)->LPtr == NULL && (*RootPtr)->RPtr == NULL) // nema potomky
-	{
-		PtrReplaced->BSTNodeCont = (*RootPtr)->BSTNodeCont;
-		PtrReplaced->Key = (*RootPtr)->Key;
-		free(RootPtr);
-		//PtrReplaced->RPtr = (*RootPtr)->BSTNodeCont;
-		//PtrReplaced->LPtr = (*RootPtr)->BSTNodeCont;
-	}
-	*/
 }
 
 void BSTDelete (tBSTNodePtr *RootPtr, char K) 		{
@@ -224,28 +206,24 @@ void BSTDelete (tBSTNodePtr *RootPtr, char K) 		{
 **/
 	tBSTNodePtr temp;
 
-	if (*RootPtr == NULL)  // if (!*RootPtr)
+	if (*RootPtr == NULL)
 	{
 		return;
 	}
-
-
-
-
 	
 	if ((*RootPtr)->Key == K)
 	{
 		temp = *RootPtr;
 
-		if ((*RootPtr)->LPtr == NULL && (*RootPtr)->RPtr == NULL) // nema potomky
+		if (temp->LPtr == NULL && temp->RPtr == NULL) // nema potomky
 		{
 			*RootPtr = NULL;
 		}
-		else if ((*RootPtr)->LPtr != NULL && (*RootPtr)->RPtr == NULL)
+		else if (temp->LPtr != NULL && temp->RPtr == NULL)
 		{
 			*RootPtr = temp->LPtr;
 		}
-		else if ((*RootPtr)->LPtr == NULL && (*RootPtr)->RPtr != NULL)
+		else if (temp->LPtr == NULL && temp->RPtr != NULL)
 		{
 			*RootPtr = temp->RPtr;
 		}
@@ -257,12 +235,6 @@ void BSTDelete (tBSTNodePtr *RootPtr, char K) 		{
 		free(temp);		
 	}
 
-
-
-
-
-
-
 	if ((*RootPtr)->Key > K)
 	{
 		if ((*RootPtr)->LPtr != NULL)
@@ -271,16 +243,16 @@ void BSTDelete (tBSTNodePtr *RootPtr, char K) 		{
 			{
 				temp = (*RootPtr)->LPtr;
 
-				if ((*RootPtr)->LPtr == NULL && (*RootPtr)->RPtr == NULL) // nema potomky
+				if (temp->LPtr == NULL && temp->RPtr == NULL) // nema potomky
 				{
 					(*RootPtr)->LPtr = NULL;
 				}
 
-				else if ((*RootPtr)->LPtr != NULL && (*RootPtr)->RPtr == NULL)
+				else if (temp->LPtr != NULL && temp->RPtr == NULL)
 				{
 					(*RootPtr)->LPtr = temp->LPtr;
 				}
-				else if ((*RootPtr)->LPtr == NULL && (*RootPtr)->RPtr != NULL)
+				else if (temp->LPtr == NULL && temp->RPtr != NULL)
 				{
 					(*RootPtr)->LPtr = temp->RPtr;
 				}
@@ -290,11 +262,9 @@ void BSTDelete (tBSTNodePtr *RootPtr, char K) 		{
 					return;
 				}
 				free(temp);
-				return; // proc?
 			}	
 		}
 		BSTDelete(&((*RootPtr)->LPtr), K);
-		return;		
 	}
 	else
 	{
@@ -302,18 +272,18 @@ void BSTDelete (tBSTNodePtr *RootPtr, char K) 		{
 		{
 			if ((*RootPtr)->RPtr->Key == K)
 			{
-				temp = (*RootPtr)->LPtr;
+				temp = (*RootPtr)->RPtr;
 
-				if ((*RootPtr)->LPtr == NULL && (*RootPtr)->RPtr == NULL) // nema potomky
+				if (temp->LPtr == NULL && temp->RPtr == NULL) // nema potomky
 				{
 					(*RootPtr)->RPtr = NULL;
 				}
 				
-				else if ((*RootPtr)->LPtr != NULL && (*RootPtr)->RPtr == NULL)
+				else if (temp->LPtr != NULL && temp->RPtr == NULL)
 				{
 					(*RootPtr)->RPtr = temp->LPtr;
 				}
-				else if ((*RootPtr)->LPtr == NULL && (*RootPtr)->RPtr != NULL)
+				else if (temp->LPtr == NULL && temp->RPtr != NULL)
 				{
 					(*RootPtr)->RPtr = temp->RPtr;
 				}
@@ -323,11 +293,9 @@ void BSTDelete (tBSTNodePtr *RootPtr, char K) 		{
 					return;
 				}
 				free(temp);
-				return; // proc?
 			}
 		}
 		BSTDelete(&((*RootPtr)->RPtr), K);
-		return;
 	}
 }
 
@@ -339,11 +307,11 @@ void BSTDispose (tBSTNodePtr *RootPtr) {
 ** inicializaci. Tuto funkci implementujte rekurzivně bez deklarování pomocné
 ** funkce.
 **/
-	if(RootPtr != NULL)
+	if(*RootPtr != NULL)
 	{
 		BSTDispose(&((*RootPtr)->LPtr));
 		BSTDispose(&((*RootPtr)->RPtr));
-		free(RootPtr);
+		free(*RootPtr);
 		*RootPtr = NULL;
 	}
 }
